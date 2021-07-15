@@ -9,6 +9,7 @@ Running `make all` will compile all the necessary code for running the simulatio
 
 Topography data can be downloaded from https://download.gebco.net/# using boundaries of: 
  - N: 50.0, S: 10.0, W: -90.0, E: -60.0
+ - Use the Esri ASCII Grid format when downloading.
 
 ## Storm Data
 
