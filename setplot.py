@@ -7,10 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import datetime
 
-import clawpack.visclaw.colormaps as colormap
 import clawpack.visclaw.gaugetools as gaugetools
 import clawpack.clawutil.data as clawutil
-import clawpack.amrclaw.data as amrclaw
 import clawpack.geoclaw.data as geodata
 
 import clawpack.geoclaw.surge.plot as surgeplot
@@ -19,8 +17,13 @@ import fetchnoaa
 
 try:
     from setplotfg import setplotfg
-except:
+except ModuleNotFoundError:
     setplotfg = None
+
+
+# Time Conversions
+def days2seconds(days):
+    return days * 60.0 ** 2 * 24.0
 
 
 def setplot(plotdata=None):
@@ -58,8 +61,16 @@ def setplot(plotdata=None):
     friction_bounds = [0.01, 0.04]
     color_limits = [0, 50]
 
-    def friction_after_axes(current_data):
+    def friction_afteraxes(current_data):
         plt.title(r"Manning's $n$ Coefficient")
+
+    # Standard set-up for plots
+    def standard_setup(title, xlimits, ylimits, axes_type):
+        plotaxes.title = title
+        plotaxes.xlimits = xlimits
+        plotaxes.ylimits = ylimits
+        plotaxes.afteraxes = axes_type
+        plotaxes.scaled = True
 
     # ==========================================================================
     #   Plot specifications
@@ -75,11 +86,7 @@ def setplot(plotdata=None):
         # Surface Figure
         plotfigure = plotdata.new_plotfigure(name="Surface - %s" % name)
         plotaxes = plotfigure.new_plotaxes()
-        plotaxes.title = "Surface"
-        plotaxes.xlimits = region_dict["xlimits"]
-        plotaxes.ylimits = region_dict["ylimits"]
-        plotaxes.afteraxes = surge_afteraxes
-        plotaxes.scaled = True
+        standard_setup("Surface", region_dict["xlimits"], region_dict["ylimits"], surge_afteraxes)
 
         surgeplot.add_surface_elevation(plotaxes, bounds=surface_limits)
         surgeplot.add_land(plotaxes)
@@ -89,14 +96,10 @@ def setplot(plotdata=None):
         # Speed Figure
         plotfigure = plotdata.new_plotfigure(name="Currents - %s" % name)
         plotaxes = plotfigure.new_plotaxes()
-        plotaxes.title = "Currents"
-        plotaxes.xlimits = region_dict["xlimits"]
-        plotaxes.ylimits = region_dict["ylimits"]
-        plotaxes.afteraxes = surge_afteraxes
-        plotaxes.scaled = True
+        standard_setup("Currents", region_dict["xlimits"], region_dict["ylimits"], surge_afteraxes)
 
         surgeplot.add_speed(plotaxes, bounds=speed_limits)
-        surgeplot.add_land(plotaxes, bounds=color_limits)  # added bounds=colorlimits
+        surgeplot.add_land(plotaxes, bounds=color_limits)
         plotaxes.plotitem_dict['speed'].amr_patchedges_show = [0] * 10
         plotaxes.plotitem_dict['land'].amr_patchedges_show = [0] * 10
     #
@@ -104,13 +107,8 @@ def setplot(plotdata=None):
     #
     plotfigure = plotdata.new_plotfigure(name='Friction')
     plotfigure.show = friction_data.variable_friction and True
-
     plotaxes = plotfigure.new_plotaxes()
-    plotaxes.xlimits = regions['Full Domain']['xlimits']
-    plotaxes.ylimits = regions['Full Domain']['ylimits']
-    # plotaxes.title = "Manning's N Coefficient"
-    plotaxes.afteraxes = friction_after_axes
-    plotaxes.scaled = True
+    standard_setup(None, regions['Full Domain']['xlimits'], regions['Full Domain']['ylimits'], friction_afteraxes)
 
     surgeplot.add_friction(plotaxes, bounds=friction_bounds)
     plotaxes.plotitem_dict['friction'].amr_patchedges_show = [0] * 10
@@ -122,26 +120,19 @@ def setplot(plotdata=None):
     # Pressure field
     plotfigure = plotdata.new_plotfigure(name='Pressure')
     plotfigure.show = surge_data.pressure_forcing and True
-
     plotaxes = plotfigure.new_plotaxes()
-    plotaxes.xlimits = regions['Full Domain']['xlimits']
-    plotaxes.ylimits = regions['Full Domain']['ylimits']
-    plotaxes.title = "Pressure Field"
-    plotaxes.afteraxes = surge_afteraxes
-    plotaxes.scaled = True
+    standard_setup("Pressure Field", regions['Full Domain']['xlimits'], regions['Full Domain']['ylimits'],
+                   surge_afteraxes)
+
     surgeplot.add_pressure(plotaxes, bounds=pressure_limits)
     surgeplot.add_land(plotaxes)
 
     # Wind field
     plotfigure = plotdata.new_plotfigure(name='Wind Speed')
     plotfigure.show = surge_data.wind_forcing and True
-
     plotaxes = plotfigure.new_plotaxes()
-    plotaxes.xlimits = regions['Full Domain']['xlimits']
-    plotaxes.ylimits = regions['Full Domain']['ylimits']
-    plotaxes.title = "Wind Field"
-    plotaxes.afteraxes = surge_afteraxes
-    plotaxes.scaled = True
+    standard_setup("Wind Field", regions['Full Domain']['xlimits'], regions['Full Domain']['ylimits'], surge_afteraxes)
+
     surgeplot.add_wind(plotaxes, bounds=wind_limits)
     surgeplot.add_land(plotaxes)
 
@@ -176,7 +167,6 @@ def setplot(plotdata=None):
         axes.plot(seconds_rel_landfall, actual_level, 'g', label='Observed')
 
         # Fix up plot - in particular fix time labels
-        days2seconds = lambda days: days * 24 * 60 * 60
         axes.set_title(station_name + " - Station ID: " + station_id)
         axes.set_xlabel('Days relative to landfall')
         axes.set_ylabel('Surface (m)')
@@ -227,11 +217,7 @@ def setplot(plotdata=None):
     for (name, region_dict) in gauge_regions.items():
         plotfigure = plotdata.new_plotfigure(name="Gauge Locations - %s" % name)
         plotaxes = plotfigure.new_plotaxes()
-        plotaxes.title = "Gauge Locations"
-        plotaxes.xlimits = region_dict["xlimits"]
-        plotaxes.ylimits = region_dict["ylimits"]
-        plotaxes.afteraxes = gauge_location_afteraxes
-        plotaxes.scaled = True
+        standard_setup("Gauge Locations", region_dict["xlimits"], region_dict["ylimits"], gauge_location_afteraxes)
 
         surgeplot.add_surface_elevation(plotaxes, bounds=surface_limits)
         surgeplot.add_land(plotaxes)
