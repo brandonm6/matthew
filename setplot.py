@@ -3,7 +3,7 @@ from __future__ import print_function
 
 import os
 
-import numpy
+import numpy as np
 import matplotlib.pyplot as plt
 import datetime
 
@@ -15,6 +15,8 @@ import clawpack.geoclaw.data as geodata
 
 import clawpack.geoclaw.surge.plot as surgeplot
 
+import fetchnoaa
+
 try:
     from setplotfg import setplotfg
 except:
@@ -22,8 +24,6 @@ except:
 
 
 def setplot(plotdata=None):
-    """"""
-
     if plotdata is None:
         from clawpack.visclaw.data import ClawPlotData
         plotdata = ClawPlotData()
@@ -68,8 +68,8 @@ def setplot(plotdata=None):
                                            clawdata.upper[0]),
                                "ylimits": (clawdata.lower[1],
                                            clawdata.upper[1])},
-               "Carolinas": {"xlimits": (-80.0, -77.0),
-                             "ylimits": (32.5, 35.5)}}
+               "Carolinas": {"xlimits": (-80.5, -77.0),
+                             "ylimits": (31.5, 35)}}
 
     for (name, region_dict) in regions.items():
         # Surface Figure
@@ -156,43 +156,53 @@ def setplot(plotdata=None):
     stations = [('8720218', 'Mayport (Bar Pilots Dock), FL'),
                 ('8720219', 'Dames Point, FL'),
                 ('8670870', 'Fort Pulaski, GA'),
+                ('8665530', 'Charleston, Cooper River Entrance, SC'),
                 ('8662245', 'Oyster Landing (N Inlet Estuary), SC'),
-                ('8661070', 'Springmaid Pier, SC'),
                 ('8658163', 'Wrightsville Beach, NC'),
-                ('8658120', 'Wilmington, NC'), ]
+                ('8658120', 'Wilmington, NC')]
+
+    landfall_time = np.datetime64('2016-10-08T12:00')
+    begin_date = datetime.datetime(2016, 10, 6)
+    end_date = datetime.datetime(2016, 10, 10)
 
     def gauge_afteraxes(current_data):
         axes = plt.gca()
+
         surgeplot.plot_landfall_gauge(current_data.gaugesoln, axes)
         station_id, station_name = stations[current_data.gaugeno - 1]
 
+        seconds_rel_landfall, actual_level = fetchnoaa.get_actual_water_levels(station_id, begin_date, end_date,
+                                                                               landfall_time)
+        axes.plot(seconds_rel_landfall, actual_level, 'g', label='Observed')
+
         # Fix up plot - in particular fix time labels
+        days2seconds = lambda days: days * 24 * 60 * 60
         axes.set_title(station_name + " - Station ID: " + station_id)
         axes.set_xlabel('Days relative to landfall')
         axes.set_ylabel('Surface (m)')
-        axes.set_xlim([-2, 1])
+        axes.set_xlim([days2seconds(-2), days2seconds(1)])
         axes.set_ylim([-1, 3])
-        axes.set_xticks([-2, -1, 0, 1])
+        axes.set_xticks([days2seconds(-2), days2seconds(-1), 0, days2seconds(1)])
         axes.set_xticklabels([r"$-2$", r"$-1$", r"$0$", r"$1$"])
         axes.grid(True)
+        plt.legend(loc="upper left")
 
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
     plotaxes.afteraxes = gauge_afteraxes
-
     # Plot surface as blue curve:
     plotitem = plotaxes.new_plotitem(plot_type='1d_plot')
-    # plotitem.plot_var = 3
-    # plotitem.plotstyle = 'b-'
+    plotitem.plot_var = 3
+    plotitem.plotstyle = 'b-'
 
     #
     #  Gauge Location Plot
     #
-    gauge_regions = {"Carolinas": {"xlimits": (-80.0, -77.0),
-                             "ylimits": (32.5, 35.5),
-                             "gaugenos": [4, 5, 6, 7]},
-                     "All": {"xlimits": (-82.0, -76.0),
-                             "ylimits": (30.0, 36.0),
+    gauge_regions = {"Carolinas": {"xlimits": (-80.5, -77.0),
+                                   "ylimits": (31.5, 35),
+                                   "gaugenos": [4, 5, 6, 7]},
+                     "All": {"xlimits": (-82.0, -77.0),
+                             "ylimits": (30.0, 35.0),
                              "gaugenos": "all"}}
 
     '''
@@ -200,10 +210,10 @@ def setplot(plotdata=None):
     if plotdata.parallel = True, multiply queue by int((frameno/2) + 0.5)
     '''
     frameno = len([file for file in os.listdir(plotdata.outdir) if "fort.q" in file])
-    queue = [key for key in gauge_regions.keys()] * int((frameno/2)+0.5)
+    queue = [key for key in gauge_regions.keys()] * int((frameno / 2) + 0.5)
 
     def which_gauges():
-        #Returns gaugenos from current region_dict - used by gauge_location_afteraxes
+        # Returns gaugenos from current region_dict - used by gauge_location_afteraxes
         gaugenos = (gauge_regions[queue[0]])["gaugenos"]
         queue.pop(0)
         return gaugenos

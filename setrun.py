@@ -23,17 +23,15 @@ import clawpack.clawutil as clawutil
 
 # Time Conversions
 def days2seconds(days):
-    return days * 60.0**2 * 24.0
+    return days * 60.0 ** 2 * 24.0
 
 
 # Scratch directory for storing topo and storm files:
-#scratch_dir = os.path.join(os.environ["CLAW"], 'geoclaw', 'scratch')
-scratch_dir = os.path.join(os.getcwd(), "scratch")
+scratch_dir = os.path.join(os.environ["CLAW"], 'geoclaw', 'scratch')
 
 
 # ------------------------------
 def setrun(claw_pkg='geoclaw'):
-
     """
     Define the parameters used for running Clawpack.
 
@@ -47,7 +45,7 @@ def setrun(claw_pkg='geoclaw'):
 
     from clawpack.clawutil import data
 
-    assert claw_pkg.lower() == 'geoclaw',  "Expected claw_pkg = 'geoclaw'"
+    assert claw_pkg.lower() == 'geoclaw', "Expected claw_pkg = 'geoclaw'"
 
     num_dim = 2
     rundata = data.ClawRunData(claw_pkg, num_dim)
@@ -69,18 +67,18 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.num_dim = num_dim
 
     # Lower and upper edge of computational domain:
-    clawdata.lower[0] = -85      # west longitude
-    clawdata.upper[0] = -60      # east longitude
+    clawdata.lower[0] = -85  # west longitude
+    clawdata.upper[0] = -60  # east longitude
 
-    clawdata.lower[1] = 20       # south latitude
-    clawdata.upper[1] = 45       # north latitude
+    clawdata.lower[1] = 20  # south latitude
+    clawdata.upper[1] = 45  # north latitude
 
     # Number of grid cells:
     degree_factor = 4  # (0.25º,0.25º) ~ (25237.5 m, 27693.2 m) resolution
     clawdata.num_cells[0] = int(clawdata.upper[0] - clawdata.lower[0]) \
-        * degree_factor
+                            * degree_factor
     clawdata.num_cells[1] = int(clawdata.upper[1] - clawdata.lower[1]) \
-        * degree_factor
+                            * degree_factor
 
     # ---------------
     # Size of system:
@@ -107,7 +105,7 @@ def setrun(claw_pkg='geoclaw'):
     # restart_file 'fort.chkNNNNN' specified below should be in
     # the OUTDIR indicated in Makefile.
 
-    clawdata.restart = False               # True to restart from prior results
+    clawdata.restart = False  # True to restart from prior results
     clawdata.restart_file = 'fort.chk00006'  # File to use for restart data
 
     # -------------
@@ -125,7 +123,7 @@ def setrun(claw_pkg='geoclaw'):
         clawdata.tfinal = days2seconds(1)
         recurrence = 4
         clawdata.num_output_times = int((clawdata.tfinal - clawdata.t0) *
-                                        recurrence / (60**2 * 24))
+                                        recurrence / (60 ** 2 * 24))
 
         clawdata.output_t0 = True  # output at initial (or restart) time?
 
@@ -139,10 +137,10 @@ def setrun(claw_pkg='geoclaw'):
         clawdata.total_steps = 1
         clawdata.output_t0 = True
 
-    clawdata.output_format = 'ascii'      # 'ascii' or 'binary'
-    clawdata.output_q_components = 'all'   # could be list such as [True,True]
+    clawdata.output_format = 'ascii'  # 'ascii' or 'binary'
+    clawdata.output_q_components = 'all'  # could be list such as [True,True]
     clawdata.output_aux_components = 'all'
-    clawdata.output_aux_onlyonce = False    # output aux arrays only at t0
+    clawdata.output_aux_onlyonce = False  # output aux arrays only at t0
 
     # ---------------------------------------------------
     # Verbosity of messages to screen during integration:
@@ -174,14 +172,14 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.cfl_max = 1.0
 
     # Maximum number of time steps to allow between output times:
-    clawdata.steps_max = 10000 #changed from 5000
+    clawdata.steps_max = 10000  # changed from 5000
 
     # ------------------
     # Method to be used:
     # ------------------
 
     # Order of accuracy:  1 => Godunov,  2 => Lax-Wendroff plus limiters
-    clawdata.order = 1 #changed from 1
+    clawdata.order = 1  # changed from 1
 
     # Use dimensional splitting? (not yet available for AMR)
     clawdata.dimensional_split = 'unsplit'
@@ -190,7 +188,7 @@ def setrun(claw_pkg='geoclaw'):
     #  0 or 'none'      ==> donor cell (only normal solver used)
     #  1 or 'increment' ==> corner transport of waves
     #  2 or 'all'       ==> corner transport of 2nd order corrections too
-    clawdata.transverse_waves = 1 #changed from 2
+    clawdata.transverse_waves = 1  # changed from 2
 
     # Number of waves in the Riemann solution:
     clawdata.num_waves = 3
@@ -205,7 +203,7 @@ def setrun(claw_pkg='geoclaw'):
     #   4 or 'vanleer'  ==> van Leer
     clawdata.limiter = ['mc', 'mc', 'mc']
 
-    clawdata.use_fwaves = True    # True ==> use f-wave version of algorithms
+    clawdata.use_fwaves = True  # True ==> use f-wave version of algorithms
 
     # Source terms splitting:
     #   src_split == 0 or 'none'
@@ -278,7 +276,7 @@ def setrun(claw_pkg='geoclaw'):
                         'center', 'center']
 
     # Flag using refinement routine flag2refine rather than richardson error
-    amrdata.flag_richardson = False    # use Richardson?
+    amrdata.flag_richardson = False  # use Richardson?
     amrdata.flag2refine = True
 
     # steps to take on each level L between regriddings of level L+1:
@@ -297,16 +295,16 @@ def setrun(claw_pkg='geoclaw'):
 
     #  ----- For developers -----
     # Toggle debugging print statements:
-    amrdata.dprint = False      # print domain flags
-    amrdata.eprint = False      # print err est flags
-    amrdata.edebug = False      # even more err est flags
-    amrdata.gprint = False      # grid bisection/clustering
-    amrdata.nprint = False      # proper nesting output
-    amrdata.pprint = False      # proj. of tagged points
-    amrdata.rprint = False      # print regridding summary
-    amrdata.sprint = False      # space/memory output
-    amrdata.tprint = False      # time step reporting each level
-    amrdata.uprint = False      # update/upbnd reporting
+    amrdata.dprint = False  # print domain flags
+    amrdata.eprint = False  # print err est flags
+    amrdata.edebug = False  # even more err est flags
+    amrdata.gprint = False  # grid bisection/clustering
+    amrdata.nprint = False  # proper nesting output
+    amrdata.pprint = False  # proj. of tagged points
+    amrdata.rprint = False  # print regridding summary
+    amrdata.sprint = False  # space/memory output
+    amrdata.tprint = False  # time step reporting each level
+    amrdata.uprint = False  # update/upbnd reporting
 
     # More AMR parameters can be set -- see the defaults in pyclaw/data.py
 
@@ -314,50 +312,49 @@ def setrun(claw_pkg='geoclaw'):
     regions = rundata.regiondata.regions
     # to specify regions of refinement append lines of the form
     #  [minlevel,maxlevel,t1,t2,x1,x2,y1,y2]
-    
+
     # Mayport (Bar Pilots Dock), FL - Station ID: 8720218
-    rundata.gaugedata.gauges.append([1, -81.42789, 30.39817,
+    rundata.gaugedata.gauges.append([1, -81.428071, 30.398204,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4,5,rundata.clawdata.t0, rundata.clawdata.tfinal, -81.5, -81.3, 30.3, 30.5]) # add .1 in all directions                      
-                                     
+    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -81.5, -81.3, 30.3, 30.5])
+
     # Dames Point, FL - Station ID: 8720219
-    rundata.gaugedata.gauges.append([2, -81.55830, 30.38670,
+    rundata.gaugedata.gauges.append([2, -81.561339, 30.388187,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4,5,rundata.clawdata.t0, rundata.clawdata.tfinal, -81.6, -81.4, 30.3, 30.5])                                   
-                                     
+    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -81.6, -81.4, 30.3, 30.5])
+
     # Fort Pulaski, GA - Station ID: 8670870
-    rundata.gaugedata.gauges.append([3, -80.90170, 32.03670,
+    rundata.gaugedata.gauges.append([3, -80.90170, 32.03330,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4,5,rundata.clawdata.t0, rundata.clawdata.tfinal, -81.0, -80.8, 31.9, 32.1])                                   
-                                     
+    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -81.0, -80.8, 31.9, 32.1])
+
+    # Charleston, Cooper River Entrance, SC - Station ID: 8665530
+    rundata.gaugedata.gauges.append([4, -79.92500, 32.78170,
+                                     rundata.clawdata.t0,
+                                     rundata.clawdata.tfinal])
+    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -80.5, -79.5, 32.2, 33.3])
+
     # Oyster Landing (N Inlet Estuary), SC - Station ID: 8662245
-    rundata.gaugedata.gauges.append([4, -79.18670, 33.35170,
+    rundata.gaugedata.gauges.append([5, -79.18670, 33.35170,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4,5,rundata.clawdata.t0, rundata.clawdata.tfinal, -79.3, -79.1, 33.2, 33.4])                                   
-                                     
-    # Springmaid Pier, SC - Station ID: 8661070
-    rundata.gaugedata.gauges.append([5, -78.91830, 33.65500,
-                                     rundata.clawdata.t0,
-                                     rundata.clawdata.tfinal])
-    regions.append([4,5,rundata.clawdata.t0, rundata.clawdata.tfinal, -79.0, -78.8, 33.5, 33.7])                                   
-                                     
+    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -79.3, -79.1, 33.2, 33.4])
+
     # Wrightsville Beach, NC - Station ID: 8658163
-    rundata.gaugedata.gauges.append([6, -77.78669, 34.21331,
+    rundata.gaugedata.gauges.append([6, -77.78670, 34.21330,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4,5,rundata.clawdata.t0, rundata.clawdata.tfinal, -77.9, -77.7, 34.1, 34.3])                                   
-                                     
+    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.9, -77.7, 34.1, 34.3])
+
     # Wilmington, NC - Station ID: 8658120
-    rundata.gaugedata.gauges.append([7, -77.95361, 34.22750,
+    rundata.gaugedata.gauges.append([7, -77.952952, 34.226623,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4,5,rundata.clawdata.t0, rundata.clawdata.tfinal, -78.1, -77.8, 34.1, 34.3])                                   
-                                     
-    
+    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -78.1, -77.8, 34.1, 34.3])
+
     # Force the gauges to also record the wind and pressure fields
     rundata.gaugedata.aux_out_fields = [4, 5, 6]
 
@@ -414,12 +411,12 @@ def setgeo(rundata):
     #   [topotype, fname]
     # See regions for control over these regions, need better bathy data for
     # the smaller domains
-    #clawutil.data.get_remote_file(
+    # clawutil.data.get_remote_file(
     #       "http://www.columbia.edu/~ktm2132/bathy/gulf_caribbean.tt3.tar.bz2")
     topo_path = os.path.join(scratch_dir, 'gebco_2020_n50.0_s10.0_w-90.0_e-60.0.asc')
     topo_data.topofiles.append([3, 1, 5, rundata.clawdata.t0,
-                                     rundata.clawdata.tfinal,
-                                     topo_path])
+                                rundata.clawdata.tfinal,
+                                topo_path])
 
     # == setfixedgrids.data values ==
     rundata.fixed_grid_data.fixedgrids = []
@@ -446,15 +443,15 @@ def setgeo(rundata):
     # Storm parameters - Parameterized storm (Holland 1980)
     data.storm_specification_type = 'holland80'  # (type 1)
     data.storm_file = os.path.expandvars(os.path.join(os.getcwd(),
-                                         'matthew.storm'))
+                                                      'matthew.storm'))
 
     # Convert ATCF data to GeoClaw format
     clawutil.data.get_remote_file(
-                   "https://ftp.nhc.noaa.gov/atcf/archive/2016/bal142016.dat.gz")
+        "https://ftp.nhc.noaa.gov/atcf/archive/2016/bal142016.dat.gz", scratch_dir)
     atcf_path = os.path.join(scratch_dir, "bal142016.dat")
     # Note that the get_remote_file function does not support gzip files which
     # are not also tar files.  The following code handles this
-    with gzip.open(".".join((atcf_path, 'gz')), 'rb') as atcf_file,    \
+    with gzip.open(".".join((atcf_path, 'gz')), 'rb') as atcf_file, \
             open(atcf_path, 'w') as atcf_unzipped_file:
         atcf_unzipped_file.write(atcf_file.read().decode('ascii'))
 
@@ -495,6 +492,7 @@ def setgeo(rundata):
 if __name__ == '__main__':
     # Set up run-time parameters and write all data files.
     import sys
+
     if len(sys.argv) == 2:
         rundata = setrun(sys.argv[1])
     else:
