@@ -304,7 +304,28 @@ def setplot(plotdata=None):
                                    "gaugenos": [4, 5, 6, 7]},
                      "All": {"xlimits": (-82.0, -77.0),
                              "ylimits": (30.0, 35.0),
-                             "gaugenos": "all"}}
+                             "gaugenos": "all"},
+                     "Mayport": {"xlimits": (-81.435, -81.39),
+                                 "ylimits": (30.39, 30.41),
+                                 "gaugenos": [1]},
+                     "Dames Point": {"xlimits": (-81.57, -81.38),
+                                     "ylimits": (30.37, 30.42),
+                                     "gaugenos": [2]},
+                     "Fort Pulaski": {"xlimits": (-80.91, -80.85),
+                                      "ylimits": (32.03, 32.04),
+                                      "gaugenos": [3]},
+                     "Charleston, Cooper River Entrance": {"xlimits": (-79.93, -79.86),
+                                                           "ylimits": (32.75, 32.79),
+                                                           "gaugenos": [4]},
+                     "Oyster Landing": {"xlimits": (-79.20, -79.18),
+                                        "ylimits": (33.34, 33.36),
+                                        "gaugenos": [5]},
+                     "Wrightsville Beach": {"xlimits": (-77.7875, -77.7850),
+                                            "ylimits": (34.2120, 34.2145),
+                                            "gaugenos": [6]},
+                     "Wilmington": {"xlimits": (-77.98, -77.93),
+                                    "ylimits": (33.95, 34.25),
+                                    "gaugenos": [7]}}
 
     '''
     if plotdata.parallel = False, multiply queue by frameno

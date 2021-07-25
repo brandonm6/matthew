@@ -75,10 +75,8 @@ def setrun(claw_pkg='geoclaw'):
 
     # Number of grid cells:
     degree_factor = 4  # (0.25º,0.25º) ~ (25237.5 m, 27693.2 m) resolution
-    clawdata.num_cells[0] = int(clawdata.upper[0] - clawdata.lower[0]) \
-                            * degree_factor
-    clawdata.num_cells[1] = int(clawdata.upper[1] - clawdata.lower[1]) \
-                            * degree_factor
+    clawdata.num_cells[0] = int(clawdata.upper[0] - clawdata.lower[0]) * degree_factor
+    clawdata.num_cells[1] = int(clawdata.upper[1] - clawdata.lower[1]) * degree_factor
 
     # ---------------
     # Size of system:
@@ -261,12 +259,12 @@ def setrun(claw_pkg='geoclaw'):
     amrdata = rundata.amrdata
 
     # max number of refinement levels:
-    amrdata.amr_levels_max = 5
+    amrdata.amr_levels_max = 7
 
     # List of refinement ratios at each level (length at least mxnest-1)
-    amrdata.refinement_ratios_x = [2, 2, 2, 6, 16]
-    amrdata.refinement_ratios_y = [2, 2, 2, 6, 16]
-    amrdata.refinement_ratios_t = [2, 2, 2, 6, 16]
+    amrdata.refinement_ratios_x = [2, 2, 2, 6, 8, 2, 2]  # 2, 2, 2, 6, 16
+    amrdata.refinement_ratios_y = [2, 2, 2, 6, 8, 2, 2]
+    amrdata.refinement_ratios_t = [2, 2, 2, 6, 8, 2, 2]
 
     # Specify type of each aux variable in amrdata.auxtype.
     # This must be a list of length maux, each element of which is one of:
@@ -314,46 +312,46 @@ def setrun(claw_pkg='geoclaw'):
     #  [minlevel,maxlevel,t1,t2,x1,x2,y1,y2]
 
     # Mayport (Bar Pilots Dock), FL - Station ID: 8720218
-    rundata.gaugedata.gauges.append([1, -81.428071, 30.398204,
+    rundata.gaugedata.gauges.append([1, -81.427915, 30.398142,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -81.5, -81.3, 30.3, 30.5])
+    regions.append([7, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -81.435, -81.39, 30.39, 30.41]) #days2seconds(-1.25)
 
     # Dames Point, FL - Station ID: 8720219
-    rundata.gaugedata.gauges.append([2, -81.561339, 30.388187,
+    rundata.gaugedata.gauges.append([2, -81.561063, 30.388167,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -81.6, -81.4, 30.3, 30.5])
+    regions.append([7, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -81.57, -81.38, 30.37, 30.42]) #days2seconds(-1.25)
 
     # Fort Pulaski, GA - Station ID: 8670870
-    rundata.gaugedata.gauges.append([3, -80.90170, 32.03330,
+    rundata.gaugedata.gauges.append([3, -80.903052, 32.034668,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -81.0, -80.8, 31.9, 32.1])
+    regions.append([6, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -80.91, -80.85, 32.03, 32.04]) #days2seconds(-1.00)
 
     # Charleston, Cooper River Entrance, SC - Station ID: 8665530
-    rundata.gaugedata.gauges.append([4, -79.92500, 32.78170,
+    rundata.gaugedata.gauges.append([4, -79.923646, 32.780783,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -80.5, -79.5, 32.2, 33.3])
+    regions.append([6, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -79.93, -79.86, 32.75, 32.79]) #days2seconds(-0.75)
 
     # Oyster Landing (N Inlet Estuary), SC - Station ID: 8662245
-    rundata.gaugedata.gauges.append([5, -79.18670, 33.35170,
+    rundata.gaugedata.gauges.append([5, -79.188923, 33.349369,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -79.3, -79.1, 33.2, 33.4])
+    regions.append([6, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -79.20, -79.18, 33.34, 33.36]) #days2seconds(-0.50)
 
     # Wrightsville Beach, NC - Station ID: 8658163
-    rundata.gaugedata.gauges.append([6, -77.78670, 34.21330,
+    rundata.gaugedata.gauges.append([6, -77.786475, 34.213270,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.9, -77.7, 34.1, 34.3])
+    regions.append([7, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.7875, -77.7850, 34.2120, 34.2145]) #days2seconds(-0.50)
 
     # Wilmington, NC - Station ID: 8658120
-    rundata.gaugedata.gauges.append([7, -77.952952, 34.226623,
+    rundata.gaugedata.gauges.append([7, -77.953522, 34.227480,
                                      rundata.clawdata.t0,
                                      rundata.clawdata.tfinal])
-    regions.append([4, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -78.1, -77.8, 34.1, 34.3])
+    regions.append([7, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.98, -77.93, 33.95, 34.25]) #days2seconds(-0.50)
 
     # Force the gauges to also record the wind and pressure fields
     rundata.gaugedata.aux_out_fields = [4, 5, 6]
