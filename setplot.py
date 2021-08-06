@@ -145,7 +145,7 @@ def setplot(plotdata=None):
     plotfigure.clf_each_gauge = True
 
     stations = [('8720218', 'Mayport (Bar Pilots Dock), FL'),
-                ('8720219', 'Dames Point, FL'),
+                # ('8720219', 'Dames Point, FL'),
                 ('8670870', 'Fort Pulaski, GA'),
                 ('8665530', 'Charleston, Cooper River Entrance, SC'),
                 ('8662245', 'Oyster Landing (N Inlet Estuary), SC'),
@@ -301,31 +301,31 @@ def setplot(plotdata=None):
     #
     gauge_regions = {"Carolinas": {"xlimits": (-80.5, -77.0),
                                    "ylimits": (31.5, 35),
-                                   "gaugenos": [4, 5, 6, 7]},
+                                   "gaugenos": [3, 4, 5, 6]},
                      "All": {"xlimits": (-82.0, -77.0),
                              "ylimits": (30.0, 35.0),
                              "gaugenos": "all"},
                      "Mayport": {"xlimits": (-81.435, -81.39),
                                  "ylimits": (30.39, 30.41),
                                  "gaugenos": [1]},
-                     "Dames Point": {"xlimits": (-81.57, -81.38),
-                                     "ylimits": (30.37, 30.42),
-                                     "gaugenos": [2]},
+                     # "Dames Point": {"xlimits": (-81.57, -81.38),
+                     #                 "ylimits": (30.37, 30.42),
+                     #                 "gaugenos": [2]},
                      "Fort Pulaski": {"xlimits": (-80.91, -80.85),
-                                      "ylimits": (32.03, 32.04),
-                                      "gaugenos": [3]},
+                                      "ylimits": (32.026, 32.045),
+                                      "gaugenos": [2]},
                      "Charleston, Cooper River Entrance": {"xlimits": (-79.93, -79.86),
                                                            "ylimits": (32.75, 32.79),
-                                                           "gaugenos": [4]},
+                                                           "gaugenos": [3]},
                      "Oyster Landing": {"xlimits": (-79.20, -79.18),
                                         "ylimits": (33.34, 33.36),
-                                        "gaugenos": [5]},
+                                        "gaugenos": [4]},
                      "Wrightsville Beach": {"xlimits": (-77.7875, -77.7850),
                                             "ylimits": (34.2120, 34.2145),
-                                            "gaugenos": [6]},
-                     "Wilmington": {"xlimits": (-77.98, -77.93),
-                                    "ylimits": (33.95, 34.25),
-                                    "gaugenos": [7]}}
+                                            "gaugenos": [5]},
+                     "Wilmington": {"xlimits": (-78.03, -77.87),
+                                    "ylimits": (33.82, 34.25),
+                                    "gaugenos": [6]}}
 
     '''
     if plotdata.parallel = False, multiply queue by frameno
