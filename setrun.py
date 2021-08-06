@@ -260,6 +260,9 @@ def setrun(claw_pkg='geoclaw'):
     # ---------------
     amrdata = rundata.amrdata
 
+    # allocate memory before running the simulation (in # of words)
+    amrdata.memsize = 16016
+
     # max number of refinement levels:
     amrdata.amr_levels_max = 6
 
@@ -312,6 +315,8 @@ def setrun(claw_pkg='geoclaw'):
     regions = rundata.regiondata.regions
     # to specify regions of refinement append lines of the form
     #  [minlevel,maxlevel,t1,t2,x1,x2,y1,y2]
+    # Entire domain region - to decrease run time
+    regions.append([1, 3, rundata.clawdata.t0, rundata.clawdata.tfinal, clawdata.lower[0], clawdata.upper[0], clawdata.lower[1], clawdata.upper[1]])
     # Charleston region
     regions.append([5, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -79.93, -79.86, 32.75, 32.79])
     # Wrightsville region
