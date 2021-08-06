@@ -21,7 +21,7 @@ PLOTDIR = _plots               # Directory for plots
 
 # Environment variable FC should be set to fortran compiler, e.g. gfortran
 #FFLAGS ?=
-FFLAGS = -O2 -fopenmp
+FFLAGS = -O3 -fopenmp
 OMP_NUM_THREADS=6
 
 # ---------------------------------
