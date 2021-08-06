@@ -12,13 +12,15 @@ from __future__ import print_function
 
 import os
 import datetime
-import shutil
 import gzip
 
 import numpy as np
 
 from clawpack.geoclaw.surge.storm import Storm
 import clawpack.clawutil as clawutil
+
+from clawpack.amrclaw import region_tools
+from clawpack.amrclaw.data import FlagRegion
 
 
 # Time Conversions
@@ -259,12 +261,12 @@ def setrun(claw_pkg='geoclaw'):
     amrdata = rundata.amrdata
 
     # max number of refinement levels:
-    amrdata.amr_levels_max = 7
+    amrdata.amr_levels_max = 6
 
     # List of refinement ratios at each level (length at least mxnest-1)
-    amrdata.refinement_ratios_x = [2, 2, 2, 6, 8, 2, 2]  # 2, 2, 2, 6, 16
-    amrdata.refinement_ratios_y = [2, 2, 2, 6, 8, 2, 2]
-    amrdata.refinement_ratios_t = [2, 2, 2, 6, 8, 2, 2]
+    amrdata.refinement_ratios_x = [2, 2, 2, 6, 8, 6]  # 2, 2, 2, 6, 8, 2, 2
+    amrdata.refinement_ratios_y = [2, 2, 2, 6, 8, 6]
+    amrdata.refinement_ratios_t = [2, 2, 2, 6, 8, 6]
 
     # Specify type of each aux variable in amrdata.auxtype.
     # This must be a list of length maux, each element of which is one of:
@@ -310,51 +312,92 @@ def setrun(claw_pkg='geoclaw'):
     regions = rundata.regiondata.regions
     # to specify regions of refinement append lines of the form
     #  [minlevel,maxlevel,t1,t2,x1,x2,y1,y2]
+    # Charleston region
+    regions.append([5, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -79.93, -79.86, 32.75, 32.79])
+    # Wrightsville region
+    regions.append([6, 6, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.7875, -77.7850, 34.2120, 34.2145])
 
+    # append as many flagregions as desired to this list:
+    flagregions = rundata.flagregiondata.flagregions
+
+    flag_regions = {"Mayport": {"levels": (5, 6),
+                                "slu": np.array(
+                                    [[30.387, -81.411, -81.406],
+                                     [30.391, -81.411, -81.406],
+                                     [30.392, -81.417, -81.403],
+                                     [30.394, -81.416, -81.398],
+                                     [30.396, -81.428, -81.390],
+                                     [30.402, -81.428, -81.390],
+                                     [30.404, -81.428, -81.402],
+                                     [30.406, -81.425, -81.413]])},
+                    "Pulaski": {"levels": (5, 6),
+                                "slu": np.array(
+                                    [[32.015, -80.885, -80.873],
+                                     [32.026, -80.885, -80.845],
+                                     [32.030, -80.882, -80.848],
+                                     [32.032, -80.905, -80.852],
+                                     [32.037, -80.905, -80.868],
+                                     [32.038, -80.905, -80.890],
+                                     [32.040, -80.905, -80.902]])},
+                    "Oyster": {"levels": (5, 6),
+                               "slu": np.array(
+                                   [[33.319, -79.184, -79.164],
+                                    [33.335, -79.189, -79.160],
+                                    [33.339, -79.201, -79.157],
+                                    [33.342, -79.201, -79.157],
+                                    [33.352, -79.193, -79.154],
+                                    [33.358, -79.180, -79.159],
+                                    [33.360, -79.178, -79.166]])},
+                    "Wilmington": {"levels": (5, 6),
+                                   "slu": np.array(
+                                       [[33.842, -77.976, -77.954],
+                                        [33.864, -78.014, -77.954],
+                                        [33.893, -78.038, -77.948],
+                                        [33.907, -78.038, -77.942],
+                                        [33.931, -77.998, -77.932],
+                                        [34.006, -77.960, -77.899],
+                                        [34.077, -77.944, -77.906],
+                                        [34.158, -77.968, -77.932],
+                                        [34.183, -77.961, -77.952],
+                                        [34.208, -77.961, -77.952],
+                                        [34.229, -77.954, -77.949]])}}
+    for (name, region_dict) in flag_regions.items():
+        # write RuledRectangle .data file
+        rr = region_tools.RuledRectangle(slu=region_dict["slu"])
+        rr.ixy = 'y'
+        rr.method = 1
+        rr.write('RuledRectangle_' + name + '.data')
+
+        # use RuledRectangle .data file and desired refinement levels to append to flagregions
+        flagregion = FlagRegion(num_dim=2)
+        flagregion.name = 'Region_' + name
+        flagregion.minlevel = region_dict["levels"][0]
+        flagregion.maxlevel = region_dict["levels"][1]
+        flagregion.t1 = rundata.clawdata.t0
+        flagregion.t2 = rundata.clawdata.tfinal
+        flagregion.spatial_region_type = 2  # Ruled Rectangle
+        flagregion.spatial_region_file = os.path.abspath('RuledRectangle_%s.data' % name)
+        flagregions.append(flagregion)
+
+    # == setgauges.data values ==
+    # for gauges append lines of the form  [gaugeno, x, y, t1, t2]
     # Mayport (Bar Pilots Dock), FL - Station ID: 8720218
-    rundata.gaugedata.gauges.append([1, -81.427915, 30.398142,
-                                     rundata.clawdata.t0,
-                                     rundata.clawdata.tfinal])
-    regions.append([7, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -81.435, -81.39, 30.39, 30.41]) #days2seconds(-1.25)
-
-    # Dames Point, FL - Station ID: 8720219
-    rundata.gaugedata.gauges.append([2, -81.561063, 30.388167,
-                                     rundata.clawdata.t0,
-                                     rundata.clawdata.tfinal])
-    regions.append([7, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -81.57, -81.38, 30.37, 30.42]) #days2seconds(-1.25)
-
+    rundata.gaugedata.gauges.append([1, -81.427915, 30.398142, rundata.clawdata.t0, rundata.clawdata.tfinal])
+    # # Dames Point, FL - Station ID: 8720219
+    # rundata.gaugedata.gauges.append([2, -81.561063, 30.388167, rundata.clawdata.t0, rundata.clawdata.tfinal])
     # Fort Pulaski, GA - Station ID: 8670870
-    rundata.gaugedata.gauges.append([3, -80.903052, 32.034668,
-                                     rundata.clawdata.t0,
-                                     rundata.clawdata.tfinal])
-    regions.append([6, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -80.91, -80.85, 32.03, 32.04]) #days2seconds(-1.00)
-
+    rundata.gaugedata.gauges.append([2, -80.903052, 32.034668, rundata.clawdata.t0, rundata.clawdata.tfinal])
     # Charleston, Cooper River Entrance, SC - Station ID: 8665530
-    rundata.gaugedata.gauges.append([4, -79.923646, 32.780783,
-                                     rundata.clawdata.t0,
-                                     rundata.clawdata.tfinal])
-    regions.append([6, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -79.93, -79.86, 32.75, 32.79]) #days2seconds(-0.75)
-
+    rundata.gaugedata.gauges.append([3, -79.923646, 32.780783, rundata.clawdata.t0, rundata.clawdata.tfinal])
     # Oyster Landing (N Inlet Estuary), SC - Station ID: 8662245
-    rundata.gaugedata.gauges.append([5, -79.188923, 33.349369,
-                                     rundata.clawdata.t0,
-                                     rundata.clawdata.tfinal])
-    regions.append([6, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -79.20, -79.18, 33.34, 33.36]) #days2seconds(-0.50)
-
+    rundata.gaugedata.gauges.append([4, -79.188923, 33.349369, rundata.clawdata.t0, rundata.clawdata.tfinal])
     # Wrightsville Beach, NC - Station ID: 8658163
-    rundata.gaugedata.gauges.append([6, -77.786475, 34.213270,
-                                     rundata.clawdata.t0,
-                                     rundata.clawdata.tfinal])
-    regions.append([7, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.7875, -77.7850, 34.2120, 34.2145]) #days2seconds(-0.50)
-
+    rundata.gaugedata.gauges.append([5, -77.786475, 34.213270, rundata.clawdata.t0, rundata.clawdata.tfinal])
     # Wilmington, NC - Station ID: 8658120
-    rundata.gaugedata.gauges.append([7, -77.953522, 34.227480,
-                                     rundata.clawdata.t0,
-                                     rundata.clawdata.tfinal])
-    regions.append([7, 7, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.98, -77.93, 33.95, 34.25]) #days2seconds(-0.50)
+    rundata.gaugedata.gauges.append([6, -77.953522, 34.227480, rundata.clawdata.t0, rundata.clawdata.tfinal])
 
     # Force the gauges to also record the wind and pressure fields
-    rundata.gaugedata.aux_out_fields = [4, 5, 6]
+    # rundata.gaugedata.aux_out_fields = [4, 5, 6]
 
     # ------------------------------------------------------------------
     # GeoClaw specific parameters:
@@ -453,11 +496,9 @@ def setgeo(rundata):
             open(atcf_path, 'w') as atcf_unzipped_file:
         atcf_unzipped_file.write(atcf_file.read().decode('ascii'))
 
-    # Uncomment/comment out to use the old version of the Ike storm file
     matthew = Storm(path=atcf_path, file_format="ATCF")
 
-    # Calculate landfall time - Need to specify as the file above does not
-    # include this info (10/8/2016 ~ 12 UTC)
+    # Calculate landfall time - Need to specify as the file above does not include (10/8/2016 ~ 12 UTC)
     matthew.time_offset = datetime.datetime(2016, 10, 8, 12)
 
     matthew.write(data.storm_file, file_format='geoclaw')
