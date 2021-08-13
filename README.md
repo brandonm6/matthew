@@ -7,10 +7,13 @@ Running `make all` will compile all the necessary code for running the simulatio
 
 ## Topography
 
-Topography data can be downloaded from https://download.gebco.net/# using boundaries of: 
- - N: 50.0, S: 10.0, W: -90.0, E: -60.0
+Topography data can be downloaded from: 
+* https://download.gebco.net
+  * Use boundaries of N: 50.0, S: 10.0, W: -90.0, E: -60.0 
+  * Use the Esri ASCII Grid format when downloading.
 
-Use the Esri ASCII Grid format when downloading.
+
+* https://www.ngdc.noaa.gov/thredds/fileServer/crm/crm_vol2.nc
 
 ## Storm Data
 
@@ -21,7 +24,6 @@ http://ftp.nhc.noaa.gov/atcf/archive/2016/bal142016.dat.gz
 
  - Full Domain (all):
     - Mayport (Bar Pilots Dock), FL 		       8720218
-    - Dames Point, FL				                    8720219
     - Fort Pulaski, GA				                   8670870
     - Charleston, Cooper River Entrance, SC  8665530
     - Oyster Landing (N Inlet Estuary), SC		 8662245
