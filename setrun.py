@@ -469,7 +469,7 @@ def setgeo(rundata):
     full_topo_path = os.path.join(scratch_dir, 'gebco_2020_n50.0_s10.0_w-90.0_e-60.0.asc')
     topo_data.topofiles.append([3, full_topo_path])
 
-    clawutil.data.get_remote_file("https://www.dropbox.com/s/pflw26su866lfp9/crm_vol2_se_atl.nc?dl=1", scratch_dir,
+    clawutil.data.get_remote_file("https://www.ngdc.noaa.gov/thredds/fileServer/crm/crm_vol2.nc", scratch_dir,
                                   file_name="crm_vol2_se_atl.nc")
     southeast_topo_path = os.path.join(scratch_dir, 'crm_vol2_se_atl')
     topotools.read_netcdf((southeast_topo_path + ".nc"), extent=[-81.5, -77.0, 31.5, 34.8], verbose=True).write(
