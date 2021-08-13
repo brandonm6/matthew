@@ -17,6 +17,7 @@ import gzip
 import numpy as np
 
 from clawpack.geoclaw.surge.storm import Storm
+from clawpack.geoclaw import topotools
 import clawpack.clawutil as clawutil
 
 from clawpack.amrclaw import region_tools
@@ -261,15 +262,16 @@ def setrun(claw_pkg='geoclaw'):
     amrdata = rundata.amrdata
 
     # allocate memory before running the simulation (in # of words)
-    amrdata.memsize = 16016
+    # amrdata.memsize = 8388606
 
     # max number of refinement levels:
     amrdata.amr_levels_max = 6
 
-    # List of refinement ratios at each level (length at least mxnest-1)
-    amrdata.refinement_ratios_x = [2, 2, 2, 6, 8, 6]  # 2, 2, 2, 6, 8, 2, 2
-    amrdata.refinement_ratios_y = [2, 2, 2, 6, 8, 6]
-    amrdata.refinement_ratios_t = [2, 2, 2, 6, 8, 6]
+    # List of refinement ratios at each level (length at least amr_max_levels-1)
+    # ratio start at level 2 (ratio 8 is for level 6)
+    amrdata.refinement_ratios_x = [2, 2, 2, 6, 8]
+    amrdata.refinement_ratios_y = [2, 2, 2, 6, 8]
+    amrdata.refinement_ratios_t = [2, 2, 2, 6, 8]
 
     # Specify type of each aux variable in amrdata.auxtype.
     # This must be a list of length maux, each element of which is one of:
@@ -316,16 +318,19 @@ def setrun(claw_pkg='geoclaw'):
     # to specify regions of refinement append lines of the form
     #  [minlevel,maxlevel,t1,t2,x1,x2,y1,y2]
     # Entire domain region - to decrease run time
-    regions.append([1, 3, rundata.clawdata.t0, rundata.clawdata.tfinal, clawdata.lower[0], clawdata.upper[0], clawdata.lower[1], clawdata.upper[1]])
+    regions.append([1, 3, rundata.clawdata.t0, rundata.clawdata.tfinal, clawdata.lower[0], clawdata.upper[0],
+                    clawdata.lower[1], clawdata.upper[1]])
     # Charleston region
-    regions.append([5, 5, rundata.clawdata.t0, rundata.clawdata.tfinal, -79.93, -79.86, 32.75, 32.79])
+    regions.append([6, 6, rundata.clawdata.t0, rundata.clawdata.tfinal, -79.93, -79.86, 32.75, 32.79])
     # Wrightsville region
     regions.append([6, 6, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.7875, -77.7850, 34.2120, 34.2145])
+    # Wilmington blocked upstream region
+    regions.append([6, 6, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.96, -77.94, 34.215, 34.235])
 
     # append as many flagregions as desired to this list:
     flagregions = rundata.flagregiondata.flagregions
 
-    flag_regions = {"Mayport": {"levels": (5, 6),
+    flag_regions = {"Mayport": {"levels": (6, 6),
                                 "slu": np.array(
                                     [[30.387, -81.411, -81.406],
                                      [30.391, -81.411, -81.406],
@@ -335,7 +340,7 @@ def setrun(claw_pkg='geoclaw'):
                                      [30.402, -81.428, -81.390],
                                      [30.404, -81.428, -81.402],
                                      [30.406, -81.425, -81.413]])},
-                    "Pulaski": {"levels": (5, 6),
+                    "Pulaski": {"levels": (6, 6),
                                 "slu": np.array(
                                     [[32.015, -80.885, -80.873],
                                      [32.026, -80.885, -80.845],
@@ -453,16 +458,23 @@ def setgeo(rundata):
     # == settopo.data values ==
     topo_data = rundata.topo_data
     topo_data.topofiles = []
+    topo_data.topo_missing = -32767
     # for topography, append lines of the form
     #   [topotype, fname]
     # See regions for control over these regions, need better bathy data for
     # the smaller domains
-    # clawutil.data.get_remote_file(
-    #       "http://www.columbia.edu/~ktm2132/bathy/gulf_caribbean.tt3.tar.bz2")
-    topo_path = os.path.join(scratch_dir, 'gebco_2020_n50.0_s10.0_w-90.0_e-60.0.asc')
-    topo_data.topofiles.append([3, 1, 5, rundata.clawdata.t0,
-                                rundata.clawdata.tfinal,
-                                topo_path])
+    clawutil.data.get_remote_file(
+        "https://www.dropbox.com/s/s58bi1l45tw9uka/gebco_2020_n50.0_s10.0_w-90.0_e-60.0.asc?dl=1", scratch_dir,
+        file_name="gebco_2020_n50.0_s10.0_w-90.0_e-60.0.asc", verbose=True)
+    full_topo_path = os.path.join(scratch_dir, 'gebco_2020_n50.0_s10.0_w-90.0_e-60.0.asc')
+    topo_data.topofiles.append([3, full_topo_path])
+
+    clawutil.data.get_remote_file("https://www.dropbox.com/s/pflw26su866lfp9/crm_vol2_se_atl.nc?dl=1", scratch_dir,
+                                  file_name="crm_vol2_se_atl.nc")
+    southeast_topo_path = os.path.join(scratch_dir, 'crm_vol2_se_atl')
+    topotools.read_netcdf((southeast_topo_path + ".nc"), extent=[-81.5, -77.0, 31.5, 34.8], verbose=True).write(
+        (southeast_topo_path + ".asc"), topo_type=3, no_data_value=-32767, header_style="asc", Z_format='%.0f')
+    topo_data.topofiles.append([3, (southeast_topo_path + ".asc")])
 
     # == setfixedgrids.data values ==
     rundata.fixed_grid_data.fixedgrids = []
