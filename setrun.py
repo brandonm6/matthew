@@ -349,15 +349,6 @@ def setrun(claw_pkg='geoclaw'):
                                      [32.037, -80.905, -80.868],
                                      [32.038, -80.905, -80.890],
                                      [32.040, -80.905, -80.902]])},
-                    "Oyster": {"levels": (5, 6),
-                               "slu": np.array(
-                                   [[33.319, -79.184, -79.164],
-                                    [33.335, -79.189, -79.160],
-                                    [33.339, -79.201, -79.157],
-                                    [33.342, -79.201, -79.157],
-                                    [33.352, -79.193, -79.154],
-                                    [33.358, -79.180, -79.159],
-                                    [33.360, -79.178, -79.166]])},
                     "Wilmington": {"levels": (5, 6),
                                    "slu": np.array(
                                        [[33.842, -77.976, -77.954],
@@ -392,19 +383,15 @@ def setrun(claw_pkg='geoclaw'):
     # == setgauges.data values ==
     # for gauges append lines of the form  [gaugeno, x, y, t1, t2]
     # Mayport (Bar Pilots Dock), FL - Station ID: 8720218
-    rundata.gaugedata.gauges.append([1, -81.427915, 30.398142, rundata.clawdata.t0, rundata.clawdata.tfinal])
-    # # Dames Point, FL - Station ID: 8720219
-    # rundata.gaugedata.gauges.append([2, -81.561063, 30.388167, rundata.clawdata.t0, rundata.clawdata.tfinal])
+    rundata.gaugedata.gauges.append([1, -81.427915, 30.398600, rundata.clawdata.t0, rundata.clawdata.tfinal])
     # Fort Pulaski, GA - Station ID: 8670870
     rundata.gaugedata.gauges.append([2, -80.903052, 32.034668, rundata.clawdata.t0, rundata.clawdata.tfinal])
     # Charleston, Cooper River Entrance, SC - Station ID: 8665530
     rundata.gaugedata.gauges.append([3, -79.923646, 32.780783, rundata.clawdata.t0, rundata.clawdata.tfinal])
-    # Oyster Landing (N Inlet Estuary), SC - Station ID: 8662245
-    rundata.gaugedata.gauges.append([4, -79.188923, 33.349369, rundata.clawdata.t0, rundata.clawdata.tfinal])
     # Wrightsville Beach, NC - Station ID: 8658163
-    rundata.gaugedata.gauges.append([5, -77.786475, 34.213270, rundata.clawdata.t0, rundata.clawdata.tfinal])
+    rundata.gaugedata.gauges.append([4, -77.786475, 34.213270, rundata.clawdata.t0, rundata.clawdata.tfinal])
     # Wilmington, NC - Station ID: 8658120
-    rundata.gaugedata.gauges.append([6, -77.953522, 34.227480, rundata.clawdata.t0, rundata.clawdata.tfinal])
+    rundata.gaugedata.gauges.append([5, -77.953000, 34.226667, rundata.clawdata.t0, rundata.clawdata.tfinal])
 
     # Force the gauges to also record the wind and pressure fields
     # rundata.gaugedata.aux_out_fields = [4, 5, 6]
