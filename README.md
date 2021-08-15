@@ -26,13 +26,11 @@ http://ftp.nhc.noaa.gov/atcf/archive/2016/bal142016.dat.gz
     - Mayport (Bar Pilots Dock), FL 		       8720218
     - Fort Pulaski, GA				                   8670870
     - Charleston, Cooper River Entrance, SC  8665530
-    - Oyster Landing (N Inlet Estuary), SC		 8662245
     - Wrightsville Beach, NC			              8658163
     - Wilmington, NC				                     8658120
 
 
  - Carolinas:
     - Charleston, Cooper River Entrance, SC  8665530
-    - Oyster Landing (N Inlet Estuary), SC		 8662245
     - Wrightsville Beach, NC			              8658163
     - Wilmington, NC				                     8658120
