@@ -7,7 +7,7 @@ Running `make all` will compile all the necessary code for running the simulatio
 
 ## Topography
 
-Topography data can be downloaded from: 
+Topography data can be downloaded from 
 * https://download.gebco.net
   * Use boundaries of N: 50.0, S: 10.0, W: -90.0, E: -60.0 
   * Use the Esri ASCII Grid format when downloading.
@@ -17,7 +17,7 @@ Topography data can be downloaded from:
 
 ## Storm Data
 
-Storm data is automatically downloaded from the NOAA atcf archive at: 
+Storm data is automatically downloaded from the NOAA atcf archive at 
 http://ftp.nhc.noaa.gov/atcf/archive/2016/bal142016.dat.gz
 
 ## Gauges
