@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import datetime
 
 import clawpack.visclaw.gaugetools as gaugetools
+import clawpack.visclaw.frametools as frametools
 import clawpack.clawutil.data as clawutil
 import clawpack.geoclaw.data as geodata
 
@@ -145,10 +146,8 @@ def setplot(plotdata=None):
     plotfigure.clf_each_gauge = True
 
     stations = [('8720218', 'Mayport (Bar Pilots Dock), FL'),
-                # ('8720219', 'Dames Point, FL'),
                 ('8670870', 'Fort Pulaski, GA'),
                 ('8665530', 'Charleston, Cooper River Entrance, SC'),
-                ('8662245', 'Oyster Landing (N Inlet Estuary), SC'),
                 ('8658163', 'Wrightsville Beach, NC'),
                 ('8658120', 'Wilmington, NC')]
 
@@ -308,31 +307,21 @@ def setplot(plotdata=None):
                      "Mayport": {"xlimits": (-81.435, -81.39),
                                  "ylimits": (30.39, 30.41),
                                  "gaugenos": [1]},
-                     # "Dames Point": {"xlimits": (-81.57, -81.38),
-                     #                 "ylimits": (30.37, 30.42),
-                     #                 "gaugenos": [2]},
                      "Fort Pulaski": {"xlimits": (-80.91, -80.85),
                                       "ylimits": (32.026, 32.045),
                                       "gaugenos": [2]},
                      "Charleston, Cooper River Entrance": {"xlimits": (-79.93, -79.86),
                                                            "ylimits": (32.75, 32.79),
                                                            "gaugenos": [3]},
-                     "Oyster Landing": {"xlimits": (-79.20, -79.18),
-                                        "ylimits": (33.34, 33.36),
-                                        "gaugenos": [4]},
                      "Wrightsville Beach": {"xlimits": (-77.7875, -77.7850),
                                             "ylimits": (34.2120, 34.2145),
-                                            "gaugenos": [5]},
+                                            "gaugenos": [4]},
                      "Wilmington": {"xlimits": (-78.03, -77.87),
                                     "ylimits": (33.82, 34.25),
-                                    "gaugenos": [6]}}
+                                    "gaugenos": [5]}}
 
-    '''
-    if plotdata.parallel = False, multiply queue by frameno
-    if plotdata.parallel = True, multiply queue by int((frameno/2) + 0.5)
-    '''
-    frameno = len([file for file in os.listdir(plotdata.outdir) if "fort.q" in file])
-    queue = [key for key in gauge_regions.keys()] * int((frameno / 2) + 0.5)
+    num_frames = len(frametools.only_most_recent(plotdata.print_framenos, plotdata.outdir))
+    queue = list(gauge_regions.keys()) * num_frames
 
     def which_gauges():
         # Returns gaugenos from current region_dict - used by gauge_location_afteraxes
