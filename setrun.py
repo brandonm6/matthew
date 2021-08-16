@@ -327,9 +327,7 @@ def setrun(claw_pkg='geoclaw'):
                     clawdata.lower[1], clawdata.upper[1]])
 
     # Wrightsville region
-    regions.append([6, 6, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.7875, -77.7850, 34.2120, 34.2145])
-    # Wilmington blocked upstream region
-    regions.append([6, 6, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.96, -77.94, 34.215, 34.235])
+    regions.append([5, 6, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.7875, -77.7850, 34.2120, 34.2145])
 
     # append as many flagregions as desired to this list:
     flagregions = rundata.flagregiondata.flagregions
@@ -344,7 +342,7 @@ def setrun(claw_pkg='geoclaw'):
                                      [30.402, -81.428, -81.390],
                                      [30.404, -81.428, -81.402],
                                      [30.406, -81.425, -81.413]])},
-                    "Pulaski": {"levels": (6, 6),
+                    "Pulaski": {"levels": (5, 6),
                                 "slu": np.array(
                                     [[32.015, -80.885, -80.873],
                                      [32.026, -80.885, -80.845],
@@ -353,7 +351,7 @@ def setrun(claw_pkg='geoclaw'):
                                      [32.037, -80.905, -80.868],
                                      [32.038, -80.905, -80.890],
                                      [32.040, -80.905, -80.902]])},
-                    "Charleston": {"levels": (6, 6),
+                    "Charleston": {"levels": (5, 6),
                                    "slu": np.array(
                                        [[32.732, -79.872, -79.866],
                                         [32.748, -79.880, -79.850],
