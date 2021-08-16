@@ -320,8 +320,7 @@ def setrun(claw_pkg='geoclaw'):
     # Entire domain region - to decrease run time
     regions.append([1, 3, rundata.clawdata.t0, rundata.clawdata.tfinal, clawdata.lower[0], clawdata.upper[0],
                     clawdata.lower[1], clawdata.upper[1]])
-    # Charleston region
-    regions.append([6, 6, rundata.clawdata.t0, rundata.clawdata.tfinal, -79.93, -79.86, 32.75, 32.79])
+
     # Wrightsville region
     regions.append([6, 6, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.7875, -77.7850, 34.2120, 34.2145])
     # Wilmington blocked upstream region
@@ -349,6 +348,17 @@ def setrun(claw_pkg='geoclaw'):
                                      [32.037, -80.905, -80.868],
                                      [32.038, -80.905, -80.890],
                                      [32.040, -80.905, -80.902]])},
+                    "Charleston": {"levels": (6, 6),
+                                   "slu": np.array(
+                                       [[32.732, -79.872, -79.866],
+                                        [32.748, -79.880, -79.850],
+                                        [32.752, -79.930, -79.847],
+                                        [32.763, -79.950, -79.862],
+                                        [32.772, -79.939, -79.860],
+                                        [32.775, -79.927, -79.863],
+                                        [32.787, -79.927, -79.879],
+                                        [32.790, -79.927, -79.905],
+                                        [32.800, -79.930, -79.905]])},
                     "Wilmington": {"levels": (5, 6),
                                    "slu": np.array(
                                        [[33.842, -77.976, -77.954],
