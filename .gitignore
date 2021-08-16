@@ -1,4 +1,7 @@
 .idea/
+.ipynb_checkpoints
+*.ipynb
+*.txt
 
 *.data
 .output
