@@ -30,7 +30,12 @@ def days2seconds(days):
 
 
 # Scratch directory for storing topo and storm files:
-scratch_dir = os.path.join(os.environ["CLAW"], 'geoclaw', 'scratch')
+# scratch_dir = os.path.join(os.environ["CLAW"], 'geoclaw', 'scratch')
+
+# Second option for location of scratch directory
+scratch_dir = os.path.join(os.getcwd(), 'scratch')
+if not os.path.exists(scratch_dir):
+    os.makedirs(scratch_dir)
 
 
 # ------------------------------
@@ -122,7 +127,7 @@ def setrun(claw_pkg='geoclaw'):
     if clawdata.output_style == 1:
         # Output nout frames at equally spaced times up to tfinal:
         clawdata.tfinal = days2seconds(1)
-        recurrence = 24
+        recurrence = 4
         clawdata.num_output_times = int((clawdata.tfinal - clawdata.t0) *
                                         recurrence / (60 ** 2 * 24))
 
@@ -261,14 +266,14 @@ def setrun(claw_pkg='geoclaw'):
     # ---------------
     amrdata = rundata.amrdata
 
-    # allocate memory before running the simulation (in # of words)
-    # amrdata.memsize = 8388606
+    # allocate memory before running the simulation to prevent crash at high refinement levels
+    # amrdata.memsize = 16777212
 
     # max number of refinement levels:
     amrdata.amr_levels_max = 6
 
     # List of refinement ratios at each level (length at least amr_max_levels-1)
-    # ratio start at level 2 (ratio 8 is for level 6)
+    # ratios start at level 2 (ratio 8 is to get from level 5 to level 6)
     amrdata.refinement_ratios_x = [2, 2, 2, 6, 8]
     amrdata.refinement_ratios_y = [2, 2, 2, 6, 8]
     amrdata.refinement_ratios_t = [2, 2, 2, 6, 8]
