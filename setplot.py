@@ -6,6 +6,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import datetime
+from collections import deque
 
 import clawpack.visclaw.gaugetools as gaugetools
 import clawpack.visclaw.frametools as frametools
@@ -49,11 +50,6 @@ def setplot(plotdata=None):
     # Load storm track
     track = surgeplot.track_data(os.path.join(plotdata.outdir, 'fort.track'))
 
-    # Set afteraxes function
-    def surge_afteraxes(current_data):
-        surgeplot.surge_afteraxes(current_data, track, plot_direction=False,
-                                  kwargs={"markersize": 4})
-
     # Color limits
     surface_limits = [-5.0, 5.0]
     speed_limits = [0.0, 3.0]
@@ -62,8 +58,10 @@ def setplot(plotdata=None):
     friction_bounds = [0.01, 0.04]
     color_limits = [0, 50]
 
-    def friction_afteraxes(current_data):
-        plt.title(r"Manning's $n$ Coefficient")
+    # Set afteraxes function
+    def surge_afteraxes(current_data):
+        surgeplot.surge_afteraxes(current_data, track, plot_direction=False,
+                                  kwargs={"markersize": 4})
 
     # Standard set-up settings for plots
     def standard_setup(title, xlimits, ylimits, axes_type):
@@ -109,7 +107,8 @@ def setplot(plotdata=None):
     plotfigure = plotdata.new_plotfigure(name='Friction')
     plotfigure.show = friction_data.variable_friction and True
     plotaxes = plotfigure.new_plotaxes()
-    standard_setup(None, regions['Full Domain']['xlimits'], regions['Full Domain']['ylimits'], friction_afteraxes)
+    standard_setup(None, regions['Full Domain']['xlimits'], regions['Full Domain']['ylimits'],
+                   """plt.title(r"Manning\'s $n$ Coefficient")""")
 
     surgeplot.add_friction(plotaxes, bounds=friction_bounds)
     plotaxes.plotitem_dict['friction'].amr_patchedges_show = [0] * 10
@@ -214,13 +213,15 @@ def setplot(plotdata=None):
                                     "ylimits": (33.82, 34.25),
                                     "gaugenos": [5]}}
 
+    # Need queue since gauge_location_afteraxes will use the gaugenos specified for all plots that call it (because
+    # it is executed after creating all plot items)
     num_frames = len(frametools.only_most_recent(plotdata.print_framenos, plotdata.outdir))
-    queue = list(gauge_regions.keys()) * num_frames
+    queue = deque(list(gauge_regions.keys()) * num_frames)
 
     def which_gauges():
         # Returns gaugenos from current region_dict - used by gauge_location_afteraxes
         gaugenos = (gauge_regions[queue[0]])["gaugenos"]
-        queue.pop(0)
+        queue.popleft()
         return gaugenos
 
     def gauge_location_afteraxes(current_data):
