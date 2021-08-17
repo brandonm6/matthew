@@ -273,10 +273,10 @@ def setrun(claw_pkg='geoclaw'):
     amrdata.amr_levels_max = 6
 
     # List of refinement ratios at each level (length at least amr_max_levels-1)
-    # ratios start at level 2 (ratio 8 is to get from level 5 to level 6)
-    amrdata.refinement_ratios_x = [2, 2, 2, 6, 8]
-    amrdata.refinement_ratios_y = [2, 2, 2, 6, 8]
-    amrdata.refinement_ratios_t = [2, 2, 2, 6, 8]
+    # ratios start at level 2 (ratio 4 is to get from level 5 to level 6)
+    amrdata.refinement_ratios_x = [2, 2, 2, 6, 4]
+    amrdata.refinement_ratios_y = [2, 2, 2, 6, 4]
+    amrdata.refinement_ratios_t = [2, 2, 2, 6, 4]
 
     # Specify type of each aux variable in amrdata.auxtype.
     # This must be a list of length maux, each element of which is one of:
@@ -327,7 +327,7 @@ def setrun(claw_pkg='geoclaw'):
                     clawdata.lower[1], clawdata.upper[1]])
 
     # Wrightsville region
-    regions.append([5, 6, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.7875, -77.7850, 34.2120, 34.2145])
+    regions.append([2, 6, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.7875, -77.7850, 34.2120, 34.2145])
 
     # append as many flagregions as desired to this list:
     flagregions = rundata.flagregiondata.flagregions
@@ -342,7 +342,7 @@ def setrun(claw_pkg='geoclaw'):
                                      [30.402, -81.428, -81.390],
                                      [30.404, -81.428, -81.402],
                                      [30.406, -81.425, -81.413]])},
-                    "Pulaski": {"levels": (5, 6),
+                    "Pulaski": {"levels": (4, 6),
                                 "slu": np.array(
                                     [[32.015, -80.885, -80.873],
                                      [32.026, -80.885, -80.845],
@@ -351,7 +351,7 @@ def setrun(claw_pkg='geoclaw'):
                                      [32.037, -80.905, -80.868],
                                      [32.038, -80.905, -80.890],
                                      [32.040, -80.905, -80.902]])},
-                    "Charleston": {"levels": (5, 6),
+                    "Charleston": {"levels": (4, 6),
                                    "slu": np.array(
                                        [[32.732, -79.872, -79.866],
                                         [32.748, -79.880, -79.850],
