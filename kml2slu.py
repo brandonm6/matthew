@@ -74,7 +74,8 @@ def kml2slu(file):
                             df["lon 0"].iloc[i] = lon_orig
                             df["lon 1"].iloc[i] = lon_orig
 
-                    polygons[name] = df[["lat", "lon 0", "lon 1"]].to_numpy()
+                    df = df.drop_duplicates(subset=['lat']).reset_index(drop=True)
+                    polygons[name] = df[["lat", "lon 0", "lon 1"]].sort_values(by=['lat']).to_numpy()
 
                     polygon = False
                     grab_next = False
