@@ -1,8 +1,10 @@
+# WORK ON REDUCING NUMBER OF FOR-LOOPS (INCREASING EFFICIENCY)
+
 import numpy as np
 import pandas as pd
 
+pd.options.mode.chained_assignment = None  # default='warn'
 
-# WORK ON REDUCING NUMBER OF FOR-LOOPS (INCREASING EFFICIENCY)
 
 def kml2slu(file):
     """
