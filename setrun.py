@@ -327,54 +327,28 @@ def setrun(claw_pkg='geoclaw'):
                     clawdata.lower[1], clawdata.upper[1]])
 
     # Wrightsville region
-    regions.append([2, 6, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.7875, -77.7850, 34.2120, 34.2145])
+    regions.append([2, 4, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.7875, -77.7850, 34.2120, 34.2145])
 
     # append as many flagregions as desired to this list:
     flagregions = rundata.flagregiondata.flagregions
 
-    flag_regions = {"Mayport": {"levels": (6, 6),
-                                "slu": np.array(
-                                    [[30.387, -81.411, -81.406],
-                                     [30.391, -81.411, -81.406],
-                                     [30.392, -81.417, -81.403],
-                                     [30.394, -81.416, -81.398],
-                                     [30.396, -81.428, -81.390],
-                                     [30.402, -81.428, -81.390],
-                                     [30.404, -81.428, -81.402],
-                                     [30.406, -81.425, -81.413]])},
-                    "Pulaski": {"levels": (4, 6),
-                                "slu": np.array(
-                                    [[32.015, -80.885, -80.873],
-                                     [32.026, -80.885, -80.845],
-                                     [32.030, -80.882, -80.848],
-                                     [32.032, -80.905, -80.852],
-                                     [32.037, -80.905, -80.868],
-                                     [32.038, -80.905, -80.890],
-                                     [32.040, -80.905, -80.902]])},
-                    "Charleston": {"levels": (4, 6),
-                                   "slu": np.array(
-                                       [[32.732, -79.872, -79.866],
-                                        [32.748, -79.880, -79.850],
-                                        [32.752, -79.930, -79.847],
-                                        [32.763, -79.950, -79.862],
-                                        [32.772, -79.939, -79.860],
-                                        [32.775, -79.927, -79.863],
-                                        [32.787, -79.927, -79.879],
-                                        [32.790, -79.927, -79.905],
-                                        [32.800, -79.930, -79.905]])},
-                    "Wilmington": {"levels": (6, 6),
-                                   "slu": np.array(
-                                       [[33.842, -77.976, -77.954],
-                                        [33.864, -78.014, -77.954],
-                                        [33.893, -78.038, -77.948],
-                                        [33.907, -78.038, -77.942],
-                                        [33.931, -77.998, -77.932],
-                                        [34.006, -77.960, -77.899],
-                                        [34.077, -77.944, -77.906],
-                                        [34.158, -77.968, -77.932],
-                                        [34.183, -77.961, -77.952],
-                                        [34.208, -77.961, -77.952],
-                                        [34.229, -77.954, -77.949]])}}
+    from kml2slu import kml2slu
+    slus = kml2slu("regions_coasts.kml")
+
+    def assign_levels(name, levels):
+        """
+        Assigns refinement levels to all polygons that belong to the "name" category
+        name: str of name included in the polygons' names belonging to the same region - given in the .kml file
+        levels: tuple in the form (minlevel, maxlevel)
+        """
+        return {key: dict(levels=levels, slu=value) for key, value in slus.items() if name in key.lower()}
+
+    # Combines sub-dictionaries with differing refinement levels to main flag_regions
+    flag_regions = {**assign_levels("mayport", (6, 6)),
+                    **assign_levels("pulaski", (4, 6)),
+                    **assign_levels("charleston", (4, 6)),
+                    **assign_levels("wilmington", (6, 6))}
+
     for (name, region_dict) in flag_regions.items():
         # write RuledRectangle .data file
         rr = region_tools.RuledRectangle(slu=region_dict["slu"])
