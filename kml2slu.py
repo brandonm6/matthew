@@ -52,7 +52,6 @@ def kml2slu(file):
                     s = pd.Series(np.array(line.strip().split(" "))).str.split(",")
                     df = pd.concat([s.str.get(0).astype(float), s.str.get(1).astype(float)], axis=1)
                     df.columns = ["lon", "lat"]
-                    df = df.drop_duplicates(subset=['lat']).reset_index(drop=True)
 
                     # Identify polygon segments
                     segments = [
@@ -65,9 +64,9 @@ def kml2slu(file):
                     for i in df.index.to_list():
                         lat = df["lat"].iloc[i]
                         lon_orig = df["lon"].iloc[i]
-                        for seg in segments:
-                            if seg.ylower <= lat <= seg.yupper:
-                                lon = ((lat - seg.y) / seg.slope) + seg.x
+                        for segment in segments:
+                            if segment.ylower <= lat <= segment.yupper:
+                                lon = ((lat - segment.y) / segment.slope) + segment.x
                                 if lon != lon_orig:
                                     if df["lon 1"].iloc[i] is not None or df["lon 0"].iloc[i] is not None:
                                         # Found three points with same latitude
@@ -84,7 +83,8 @@ def kml2slu(file):
                             df["lon 0"].iloc[i] = lon_orig
                             df["lon 1"].iloc[i] = lon_orig
 
-                    polygons[name] = df[["lat", "lon 0", "lon 1"]].sort_values(by=['lat']).to_numpy()
+                    polygons[name] = df[["lat", "lon 0", "lon 1"]].drop_duplicates(subset=['lat']).sort_values(
+                        by=['lat']).reset_index(drop=True).to_numpy()
 
                     if len(tmp_threats) > 1:
                         threats += tmp_threats
