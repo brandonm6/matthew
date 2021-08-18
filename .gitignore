@@ -1,5 +1,6 @@
 .idea/
 notebooks/
+prev plots/
 *.ipynb
 *.txt
 
