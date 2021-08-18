@@ -12,7 +12,8 @@ def kml2slu(file):
     named slu_ouputs and are also returned in a dictionary where key is the name of the Polygon and value is the slu
     in numpy array format
 
-    file: .kml file downloaded from Google Earth - there can't be any three points on the polygon with same the latitude
+    file: .kml file downloaded from Google Earth - there must not be any three points on the polygon with same the
+          latitude otherwise there will be errors in creating the slus
     """
 
     class Segment:
@@ -31,6 +32,8 @@ def kml2slu(file):
     polygon = False
     grab_next = False
 
+    threats = []
+
     with open(file, "r") as kml_file:
         for num, line in enumerate(kml_file, 1):
             if "<Placemark>" in line:
@@ -44,10 +47,12 @@ def kml2slu(file):
                 elif ("<coordinates>" in line) and polygon:
                     grab_next = True
                 elif grab_next:
+                    tmp_threats = ["\n" + name]
                     # Grabs coordinates of points and puts them in dataframe with [lat, lon]
                     s = pd.Series(np.array(line.strip().split(" "))).str.split(",")
                     df = pd.concat([s.str.get(0).astype(float), s.str.get(1).astype(float)], axis=1)
                     df.columns = ["lon", "lat"]
+                    df = df.drop_duplicates(subset=['lat']).reset_index(drop=True)
 
                     # Identify polygon segments
                     segments = [
@@ -64,7 +69,10 @@ def kml2slu(file):
                             if seg.ylower <= lat <= seg.yupper:
                                 lon = ((lat - seg.y) / seg.slope) + seg.x
                                 if lon != lon_orig:
-                                    if lon > lon_orig:
+                                    if df["lon 1"].iloc[i] is not None or df["lon 0"].iloc[i] is not None:
+                                        # Found three points with same latitude
+                                        tmp_threats.append(str(lat))
+                                    elif lon > lon_orig:
                                         df["lon 1"].iloc[i] = lon
                                         df["lon 0"].iloc[i] = lon_orig
                                     else:
@@ -76,12 +84,18 @@ def kml2slu(file):
                             df["lon 0"].iloc[i] = lon_orig
                             df["lon 1"].iloc[i] = lon_orig
 
-                    df = df.drop_duplicates(subset=['lat']).reset_index(drop=True)
                     polygons[name] = df[["lat", "lon 0", "lon 1"]].sort_values(by=['lat']).to_numpy()
+
+                    if len(tmp_threats) > 1:
+                        threats += tmp_threats
 
                     polygon = False
                     grab_next = False
                     placemark = False
+
+    if threats:
+        raise TypeError("The following polygons have three points with the same latitude. Each latitude "
+                        "can belong to at most two points on a polygon." + '\n'.join(threats))
 
     with open("slu_ouputs.txt", "w") as slu_file:
         for polygon in polygons:
