@@ -326,35 +326,28 @@ def setrun(claw_pkg='geoclaw'):
     regions.append([1, 3, rundata.clawdata.t0, rundata.clawdata.tfinal, clawdata.lower[0], clawdata.upper[0],
                     clawdata.lower[1], clawdata.upper[1]])
 
-    # Wrightsville region
-    regions.append([2, 4, rundata.clawdata.t0, rundata.clawdata.tfinal, -77.7875, -77.7850, 34.2120, 34.2145])
-
     # append as many flagregions as desired to this list:
     flagregions = rundata.flagregiondata.flagregions
 
     from kml2slu import kml2slu
-    slus = kml2slu("regions_coasts.kml")
+    # Coverts .kml file with polygons drawn in Google Earth to slu format
+    slus = kml2slu("regions.kml")
 
-    def assign_levels(name, levels):
-        """
-        Assigns refinement levels to all polygons that belong to the "name" category
-        name: str of name included in the polygons' names belonging to the same region - given in the .kml file
-        levels: tuple in the form (minlevel, maxlevel)
-        """
-        return {key: dict(levels=levels, slu=value) for key, value in slus.items() if name in key.lower()}
-
-    # Combines sub-dictionaries with differing refinement levels to main flag_regions
-    flag_regions = {**assign_levels("mayport", (6, 6)),
-                    **assign_levels("pulaski", (4, 6)),
-                    **assign_levels("charleston", (4, 6)),
-                    **assign_levels("wilmington", (6, 6))}
+    flag_regions = {"mayport": {"levels": (6, 6),
+                                "slu": slus.get("mayport")},
+                    "pulaski": {"levels": (4, 6),
+                                "slu": slus.get("pulaski")},
+                    "charleston": {"levels": (4, 6),
+                                   "slu": slus.get("charleston")},
+                    "wilmington": {"levels": (6, 6),
+                                   "slu": slus.get("wilmington")}}
 
     for (name, region_dict) in flag_regions.items():
         # write RuledRectangle .data file
         rr = region_tools.RuledRectangle(slu=region_dict["slu"])
         rr.ixy = 'y'
         rr.method = 1
-        rr.write('RuledRectangle_' + name + '.data')
+        rr.write('RuledRectangle_%s.data' % name)
 
         # use RuledRectangle .data file and desired refinement levels to append to flagregions
         flagregion = FlagRegion(num_dim=2)
@@ -376,7 +369,7 @@ def setrun(claw_pkg='geoclaw'):
     # Charleston, Cooper River Entrance, SC - Station ID: 8665530
     rundata.gaugedata.gauges.append([3, -79.923646, 32.780783, rundata.clawdata.t0, rundata.clawdata.tfinal])
     # Wrightsville Beach, NC - Station ID: 8658163
-    rundata.gaugedata.gauges.append([4, -77.786475, 34.213270, rundata.clawdata.t0, rundata.clawdata.tfinal])
+    rundata.gaugedata.gauges.append([4, -77.786275, 34.213270, rundata.clawdata.t0, rundata.clawdata.tfinal])
     # Wilmington, NC - Station ID: 8658120
     rundata.gaugedata.gauges.append([5, -77.953000, 34.226667, rundata.clawdata.t0, rundata.clawdata.tfinal])
 
@@ -444,7 +437,7 @@ def setgeo(rundata):
     topo_data.topofiles.append([3, full_topo_path])
 
     clawutil.data.get_remote_file("https://www.ngdc.noaa.gov/thredds/fileServer/crm/crm_vol2.nc", scratch_dir,
-                                  file_name="crm_vol2_se_atl.nc")
+                                  file_name="crm_vol2_se_atl.nc", verbose=True)
     southeast_topo_path = os.path.join(scratch_dir, 'crm_vol2_se_atl')
     topotools.read_netcdf((southeast_topo_path + ".nc"), extent=[-81.5, -77.0, 31.5, 34.8], verbose=True).write(
         (southeast_topo_path + ".asc"), topo_type=3, no_data_value=-32767, header_style="asc", Z_format='%.0f')
