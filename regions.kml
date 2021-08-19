@@ -3,40 +3,14 @@
 <Document>
 	<name>My Places.kml</name>
 	<open>1</open>
-	<Style id="sn_ylw-pushpin12">
-		<IconStyle>
-			<scale>1.1</scale>
-			<Icon>
-				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
-			</Icon>
-			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
-		</IconStyle>
-		<LineStyle>
-			<color>ff00aaff</color>
-			<width>5</width>
-		</LineStyle>
-		<PolyStyle>
-			<fill>0</fill>
-		</PolyStyle>
-	</Style>
-	<StyleMap id="m_ylw-pushpin0">
+	<StyleMap id="msn_ylw-pushpin11">
 		<Pair>
 			<key>normal</key>
-			<styleUrl>#s_ylw-pushpin0</styleUrl>
+			<styleUrl>#sn_ylw-pushpin6</styleUrl>
 		</Pair>
 		<Pair>
 			<key>highlight</key>
-			<styleUrl>#s_ylw-pushpin_hl</styleUrl>
-		</Pair>
-	</StyleMap>
-	<StyleMap id="msn_ylw-pushpin9">
-		<Pair>
-			<key>normal</key>
-			<styleUrl>#sn_ylw-pushpin5</styleUrl>
-		</Pair>
-		<Pair>
-			<key>highlight</key>
-			<styleUrl>#sh_ylw-pushpin8</styleUrl>
+			<styleUrl>#sh_ylw-pushpin10</styleUrl>
 		</Pair>
 	</StyleMap>
 	<Style id="sh_ylw-pushpin10">
@@ -55,7 +29,7 @@
 			<fill>0</fill>
 		</PolyStyle>
 	</Style>
-	<Style id="sh_ylw-pushpin6">
+	<Style id="sh_ylw-pushpin8">
 		<IconStyle>
 			<scale>1.3</scale>
 			<Icon>
@@ -103,7 +77,7 @@
 			<fill>0</fill>
 		</PolyStyle>
 	</Style>
-	<Style id="sh_ylw-pushpin8">
+	<Style id="sh_ylw-pushpin6">
 		<IconStyle>
 			<scale>1.3</scale>
 			<Icon>
@@ -119,15 +93,60 @@
 			<fill>0</fill>
 		</PolyStyle>
 	</Style>
-	<Style id="s_ylw-pushpin_hl">
+	<Style id="s_ylw-pushpin">
 		<IconStyle>
-			<scale>1.3</scale>
+			<scale>1.1</scale>
 			<Icon>
 				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
 			</Icon>
 			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
 		</IconStyle>
 	</Style>
+	<StyleMap id="msn_ylw-pushpin9">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_ylw-pushpin5</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_ylw-pushpin8</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="sn_ylw-pushpin12">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+		<LineStyle>
+			<color>ff00aaff</color>
+			<width>5</width>
+		</LineStyle>
+		<PolyStyle>
+			<fill>0</fill>
+		</PolyStyle>
+	</Style>
+	<Style id="s_ylw-pushpin0">
+		<IconStyle>
+			<scale>1.1</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
+	<StyleMap id="m_ylw-pushpin0">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#s_ylw-pushpin0</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#s_ylw-pushpin_hl0</styleUrl>
+		</Pair>
+	</StyleMap>
 	<Style id="sn_ylw-pushpin6">
 		<IconStyle>
 			<scale>1.1</scale>
@@ -144,16 +163,6 @@
 			<fill>0</fill>
 		</PolyStyle>
 	</Style>
-	<StyleMap id="msn_ylw-pushpin13">
-		<Pair>
-			<key>normal</key>
-			<styleUrl>#sn_ylw-pushpin12</styleUrl>
-		</Pair>
-		<Pair>
-			<key>highlight</key>
-			<styleUrl>#sh_ylw-pushpin5</styleUrl>
-		</Pair>
-	</StyleMap>
 	<StyleMap id="msn_ylw-pushpin12">
 		<Pair>
 			<key>normal</key>
@@ -164,6 +173,44 @@
 			<styleUrl>#sh_ylw-pushpin6</styleUrl>
 		</Pair>
 	</StyleMap>
+	<StyleMap id="msn_ylw-pushpin13">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#sn_ylw-pushpin12</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#sh_ylw-pushpin5</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="s_ylw-pushpin_hl">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
+	<StyleMap id="m_ylw-pushpin">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#s_ylw-pushpin</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#s_ylw-pushpin_hl</styleUrl>
+		</Pair>
+	</StyleMap>
+	<Style id="s_ylw-pushpin_hl0">
+		<IconStyle>
+			<scale>1.3</scale>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
+			</Icon>
+			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+		</IconStyle>
+	</Style>
 	<Style id="sn_ylw-pushpin20">
 		<IconStyle>
 			<scale>1.1</scale>
@@ -179,25 +226,6 @@
 		<PolyStyle>
 			<fill>0</fill>
 		</PolyStyle>
-	</Style>
-	<StyleMap id="msn_ylw-pushpin11">
-		<Pair>
-			<key>normal</key>
-			<styleUrl>#sn_ylw-pushpin6</styleUrl>
-		</Pair>
-		<Pair>
-			<key>highlight</key>
-			<styleUrl>#sh_ylw-pushpin10</styleUrl>
-		</Pair>
-	</StyleMap>
-	<Style id="s_ylw-pushpin0">
-		<IconStyle>
-			<scale>1.1</scale>
-			<Icon>
-				<href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>
-			</Icon>
-			<hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
-		</IconStyle>
 	</Style>
 	<Folder>
 		<name>My Places</name>
@@ -218,20 +246,20 @@
 			</ListStyle>
 		</Style>
 		<Placemark>
-			<name>mayport</name>
+			<name>Mayport</name>
 			<LookAt>
-				<longitude>-81.42792473416699</longitude>
-				<latitude>30.39816434580071</latitude>
-				<altitude>1.226597100860729</altitude>
-				<heading>-0.1091048813266332</heading>
+				<longitude>-81.42798093984449</longitude>
+				<latitude>30.39821516294231</latitude>
+				<altitude>0</altitude>
+				<heading>-0.1091333567497142</heading>
 				<tilt>0</tilt>
-				<range>22.0282608130725</range>
+				<range>267.21168585258</range>
 				<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
 			</LookAt>
-			<styleUrl>#m_ylw-pushpin0</styleUrl>
+			<styleUrl>#m_ylw-pushpin</styleUrl>
 			<Point>
 				<gx:drawOrder>1</gx:drawOrder>
-				<coordinates>-81.42791469013177,30.39814228340141,0</coordinates>
+				<coordinates>-81.427915,30.3986,0</coordinates>
 			</Point>
 		</Placemark>
 		<Placemark>
@@ -269,7 +297,7 @@
 			</Point>
 		</Placemark>
 		<Placemark>
-			<name>Wrightsville Beach</name>
+			<name>Wrightsville</name>
 			<LookAt>
 				<longitude>-77.78645326731228</longitude>
 				<latitude>34.2132740023368</latitude>
@@ -288,18 +316,18 @@
 		<Placemark>
 			<name>Wilmington</name>
 			<LookAt>
-				<longitude>-77.95351660263314</longitude>
-				<latitude>34.22746895453125</latitude>
+				<longitude>-79.91008576626</longitude>
+				<latitude>32.77222479641406</latitude>
 				<altitude>0</altitude>
-				<heading>31.16460720154451</heading>
+				<heading>0.6518748421939247</heading>
 				<tilt>0</tilt>
-				<range>17.05672154024506</range>
+				<range>9954.817204199819</range>
 				<gx:altitudeMode>relativeToSeaFloor</gx:altitudeMode>
 			</LookAt>
-			<styleUrl>#m_ylw-pushpin0</styleUrl>
+			<styleUrl>#m_ylw-pushpin</styleUrl>
 			<Point>
 				<gx:drawOrder>1</gx:drawOrder>
-				<coordinates>-77.95352208134145,34.2274803528739,0</coordinates>
+				<coordinates>-77.953,34.226667,0</coordinates>
 			</Point>
 		</Placemark>
 		<Placemark>
@@ -310,7 +338,7 @@
 				<outerBoundaryIs>
 					<LinearRing>
 						<coordinates>
-							-81.41206175061821,30.39168054521106,0 -81.41151759444779,30.38762825345673,0 -81.40648967099341,30.38768118672811,0 -81.40629963555516,30.39195297764903,0 -81.39080318083971,30.39663173912585,0 -81.39101356390685,30.40245162987113,0 -81.41304315354914,30.40700071144683,0 -81.42604788478563,30.4066630064656,0 -81.42904046974942,30.40442744439332,0 -81.4287933552003,30.39668459461103,0 -81.42884583172014,30.3965303845414,0 -81.4163976663924,30.39486138738839,0 -81.41699557648489,30.39264033567002,0 -81.41206175061821,30.39168054521106,0 
+							-81.412058882382,30.39167089812407,0 -81.41151759444779,30.38762825345673,0 -81.40648967099341,30.38768118672811,0 -81.40630189418705,30.39195417186073,0 -81.39080318083971,30.39663173912585,0 -81.39101356390685,30.40245162987113,0 -81.41304315354914,30.40700071144683,0 -81.42604788478563,30.4066630064656,0 -81.42904046974942,30.40442744439332,0 -81.4287933552003,30.39668459461103,0 -81.42884583172014,30.3965303845414,0 -81.4163976663924,30.39486138738839,0 -81.41699557648489,30.39264033567002,0 -81.412058882382,30.39167089812407,0 
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
