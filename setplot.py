@@ -16,7 +16,6 @@ import clawpack.geoclaw.util as geoutil
 
 import clawpack.geoclaw.surge.plot as surgeplot
 
-
 try:
     from setplotfg import setplotfg
 except ModuleNotFoundError:
@@ -26,6 +25,10 @@ except ModuleNotFoundError:
 # Time Conversions
 def days2seconds(days):
     return days * 60.0 ** 2 * 24.0
+
+
+# Scratch directory for caching observed water levels at gauges
+scratch_dir = os.path.join(os.getcwd(), 'scratch')
 
 
 def setplot(plotdata=None):
@@ -160,7 +163,8 @@ def setplot(plotdata=None):
         surgeplot.plot_landfall_gauge(current_data.gaugesoln, axes)
         station_id, station_name = stations[current_data.gaugeno - 1]
 
-        date_time, water_level, prediction = geoutil.fetch_noaa_tide_data(station_id, begin_date, end_date)
+        date_time, water_level, prediction = geoutil.fetch_noaa_tide_data(station_id, begin_date, end_date,
+                                                                          cache_dir=scratch_dir)
 
         # Subtract tide predictions from measured water levels
         water_level -= prediction
@@ -191,13 +195,7 @@ def setplot(plotdata=None):
     #
     #  Gauge Location Plot
     #
-    gauge_regions = {"Carolinas": {"xlimits": (-80.5, -77.0),
-                                   "ylimits": (31.5, 35),
-                                   "gaugenos": [3, 4, 5, 6]},
-                     "All": {"xlimits": (-82.0, -77.0),
-                             "ylimits": (30.0, 35.0),
-                             "gaugenos": "all"},
-                     "Mayport": {"xlimits": (-81.435, -81.39),
+    gauge_regions = {"Mayport": {"xlimits": (-81.435, -81.39),
                                  "ylimits": (30.39, 30.41),
                                  "gaugenos": [1]},
                      "Fort Pulaski": {"xlimits": (-80.91, -80.85),
@@ -211,7 +209,13 @@ def setplot(plotdata=None):
                                             "gaugenos": [4]},
                      "Wilmington": {"xlimits": (-78.03, -77.87),
                                     "ylimits": (33.82, 34.25),
-                                    "gaugenos": [5]}}
+                                    "gaugenos": [5]},
+                     "Carolinas": {"xlimits": (-80.5, -77.0),
+                                   "ylimits": (31.5, 35),
+                                   "gaugenos": [3, 4, 5, 6]},
+                     "All": {"xlimits": (-82.0, -77.0),
+                             "ylimits": (30.0, 35.0),
+                             "gaugenos": "all"}}
 
     # Need queue since gauge_location_afteraxes will use the gaugenos specified for all plots that call it (because
     # it is executed after creating all plot items)
