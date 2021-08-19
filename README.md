@@ -34,3 +34,8 @@ http://ftp.nhc.noaa.gov/atcf/archive/2016/bal142016.dat.gz
     - Charleston, Cooper River Entrance, SC  8665530
     - Wrightsville Beach, NC			              8658163
     - Wilmington, NC				                     8658120
+
+## Regions
+
+Regions that are refined at higher levels are drawn in Google Earth and downloaded to regions.kml. The .kml file is then run through kml2slu.py, which makes it useable to GeoClaw. Raising the levels assigned to each region (flag_region) in setrun.py may provide more accurate storm surge predictions.
+
