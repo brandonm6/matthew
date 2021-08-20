@@ -31,7 +31,8 @@ into the `matthew/scratch` directory.
 
 ## Gauges
 
-Gauges 1-5 in the example correspond to five NOAA Tides and Currents Stations (selected from https://stn.wim.usgs.gov/FEV/#MatthewOctober2016) along the Eastern Seaboard.
+Gauges 1-5 in the example correspond to five NOAA Tides and Currents Stations along the Eastern Seaboard, selected from
+* https://stn.wim.usgs.gov/FEV/#MatthewOctober2016
 The`fetch_noaa_tide_data()` method is used to compare the observed gauge data (de-tided) to the simulated gauge data in _setplot.py_. 
 
 1. Mayport (Bar Pilots Dock), FL 8720218 
