@@ -1,4 +1,4 @@
-# WORK ON REDUCING NUMBER OF FOR-LOOPS (INCREASING EFFICIENCY)
+# work on increasing efficiency
 
 import numpy as np
 import pandas as pd
@@ -6,16 +6,14 @@ import pandas as pd
 pd.options.mode.chained_assignment = None  # default='warn'
 
 
-def kml2slu(file):
-    """
-    Converts Polygons drawn in Google Earth to slu used by GeoClaw flag_regions - slus are outputted to a .txt file
-    named slu_ouputs and are also returned in a dictionary where key is the name of the Polygon and value is the slu
-    in numpy array format
+def kml2slu(file, write=False):
+    """Converts Polygons drawn in Google Earth to slu used by GeoClaw flag_regions
 
-    file: .kml file downloaded from Google Earth - there must not be any three points on the polygon with same the
-          latitude otherwise there will be errors in creating the slus
+    :param str file: path to .kml file downloaded from Google Earth
+            - there must not be any three points on the polygon with the same latitude
+    :param bool write: will write slus to a .txt file named slu_outputs
+    :return: a dictionary of polygon names with their slus in ndarray format
     """
-
     class Segment:
         # Stores info needed for each line segment making up the polygon
         def __init__(self, x0, x1, y0, y1):
@@ -68,7 +66,7 @@ def kml2slu(file):
                             if segment.ylower <= lat <= segment.yupper:
                                 lon = ((lat - segment.y) / segment.slope) + segment.x
                                 if lon != lon_orig:
-                                    if df["lon 1"].iloc[i] is not None or df["lon 0"].iloc[i] is not None:
+                                    if df["lon 0"].iloc[i] is not None:
                                         # Found three points with same latitude
                                         tmp_threats.append(str(lat))
                                     elif lon > lon_orig:
@@ -97,8 +95,8 @@ def kml2slu(file):
         raise TypeError("The following polygons have three points with the same latitude. Each latitude "
                         "can belong to at most two points on a polygon." + '\n'.join(threats))
 
-    with open("slu_ouputs.txt", "w") as slu_file:
-        for polygon in polygons:
-            slu_file.writelines([polygon, ":\n", str(polygons.get(polygon)), "\n\n"])
+    if write:
+        with open("slu_ouputs.txt", "w") as slu_file:
+            [slu_file.writelines([p, ":\n", str(polygons.get(p)), "\n\n"]) for p in polygons]
 
     return polygons
